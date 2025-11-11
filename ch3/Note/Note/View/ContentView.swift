@@ -14,36 +14,35 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.notes, id: \.id) { note in
-                NavigationLink(destination: DetailsView(note: note)) {
-                    VStack(alignment: .leading) {
-                        Text(note.title ?? "")
-                            .font(.system(size: 22, weight: .regular))
+            List {
+                ForEach(viewModel.notes, id:\.id) { Note in
+                    NavigationLink(destination: DetailsView(note: Note)) {
+                        VStack(alignment: .leading) {
+                            Text(Note.title ?? "").font(.system(size: 22, weight: .regular))
+                        }.frame(maxHeight: 200)
                     }
-                    .frame(maxHeight: 200)
-                }
-            }
-            .onAppear(perform: self.viewModel.fetchData)
-            .navigationTitle("Notes")
-            .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    HStack {
-                        Text("\(viewModel.notes.count) notes")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Button {
-                            showingSheet.toggle()
-                        } label: {
-                            Image(systemName: "square.and.pencil")
+                }.onDelete(perform: self.viewModel.deleteData(at:))
+            }.onAppear(perform: self.viewModel.fetchData)
+                .navigationTitle("Notes")
+                .toolbar {
+                    ToolbarItemGroup(placement: .bottomBar) {
+                        HStack {
+                            Text("\(viewModel.notes.count) notes")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Button {
+                                showingSheet.toggle()
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                            }
+                            .imageScale(.large)
                         }
-                        .imageScale(.large)
                     }
                 }
-            }
-            .sheet(isPresented: $showingSheet) {
-                FormView()
-                    .presentationDetents([.large, .medium])
-            }
+                .sheet(isPresented: $showingSheet) {
+                    FormView()
+                        .presentationDetents([.large, .medium])
+                }
         }
     }
 }
