@@ -7,6 +7,9 @@
 import SwiftUI
 
 struct DetailsView: View {
+    @State private var presentAlert = false
+    @State private var titleText: String = ""
+    @ObservedObject private var viewModel = NoteViewModel()
     var note: Note
     
     var body: some View {
@@ -18,7 +21,31 @@ struct DetailsView: View {
                     
                     Spacer()
                 }
-            }.navigationTitle("Details")
+            }
+            .navigationTitle("Details")
+            .toolbar{
+                ToolbarItemGroup(placement: .confirmationAction){
+                    Button {
+                        presentAlert = true
+                    } label: {
+                        Text ("Edit").bold()
+                    }.alert("Note", isPresented: $presentAlert, actions: {
+                        TextField("\(note.title ?? "")", text: $titleText)
+                        Button("Update", action: {
+                            //Update data and erase the text
+                            self.viewModel.updateData(title: titleText, id: note.id ?? "")
+                            titleText = ""
+                        })
+                        Button("Cancel", role: .cancel, action: {
+                            presentAlert = false
+                            titleText = ""
+                        })
+                    }, message: {
+                        Text("Write your new note")
+                    })
+                }
+            }
+        
     }
 }
 
