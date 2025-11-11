@@ -10,36 +10,41 @@ import SwiftUI
 struct ContentView: View {
     @State private var showingSheet = false
     @State private var postDetent = PresentationDetent.medium
-    @ObservedObject private var viewModel = NoteViewModel()
+    @StateObject private var viewModel = NoteViewModel()
     
     var body: some View {
         NavigationStack {
-            List {
-                // TODO present our notes
-                ForEach(viewModel.notes, id:\.id){
-                    Note in VStack(alignment: .leading){
-                        Text(Note.title ?? "").font(.system(size:22, weight: .regular))
-                    }.frame(maxHeight: 200)
+            List(viewModel.notes, id: \.id) { note in
+                NavigationLink(destination: DetailsView(note: note)) {
+                    VStack(alignment: .leading) {
+                        Text(note.title ?? "")
+                            .font(.system(size: 22, weight: .regular))
+                    }
+                    .frame(maxHeight: 200)
                 }
-                // fetch from firestore
-            }.onAppear(perform: self.viewModel.fetchData)
-                .toolbar {
-                    ToolbarItemGroup(placement: .bottomBar){
+            }
+            .onAppear(perform: self.viewModel.fetchData)
+            .navigationTitle("Notes")
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    HStack {
                         Text("\(viewModel.notes.count) notes")
-                        Spacer()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         Button {
-                            // write a new note
                             showingSheet.toggle()
-                        } label : {
+                        } label: {
                             Image(systemName: "square.and.pencil")
                         }
                         .imageScale(.large)
-                        .sheet(isPresented: $showingSheet){
-                            FormView().presentationDetents([.large, .medium])
-                        }
                     }
                 }
-        }.navigationTitle("Notes")
+            }
+            .sheet(isPresented: $showingSheet) {
+                FormView()
+                    .presentationDetents([.large, .medium])
+            }
+        }
     }
 }
 
