@@ -8,8 +8,17 @@ import SwiftUI
 
 struct DetailsView: View {
     var note: Note
+    
     var body: some View {
-        Text("\(note.title ?? "")")
+            ScrollView {
+                VStack {
+                    Text("\(note.title ?? "")")
+                        .font(.system(size: 22, weight: .regular))
+                        .padding()
+                    
+                    Spacer()
+                }
+            }.navigationTitle("Details")
     }
 }
 
