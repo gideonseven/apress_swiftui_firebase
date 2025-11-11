@@ -10,6 +10,7 @@ import SwiftUI
 struct FormView: View {
     @Environment(\.dismiss) var dismiss
     @State var titleText = ""
+    @ObservedObject private var viewModel = NoteViewModel()
     
     var body: some View {
         // ...
@@ -22,6 +23,9 @@ struct FormView: View {
                 Section {
                     Button(action: {
                         //TODO : upload data
+                        self.viewModel.addData(title: titleText)
+                        titleText = ""
+                        dismiss()
                     }){
                         Text("Save Now")
                     }.disabled(self.titleText.isEmpty)

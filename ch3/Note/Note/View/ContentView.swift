@@ -8,14 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showingSheet = false
+    @State private var postDetent = PresentationDetent.medium
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        NavigationStack {
+            List {
+                // TODO present our notes
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar){
+                    Text("X notes") // TODO
+                    Spacer()
+                    Button {
+                        // write a new note
+                        showingSheet.toggle()
+                    } label : {
+                        Image(systemName: "square.and.pencil")
+                    }
+                    .imageScale(.large)
+                    .sheet(isPresented: $showingSheet){
+                        FormView().presentationDetents([.large, .medium])
+                    }
+                }
+            }
+        }.navigationTitle("Notes")
     }
 }
 
