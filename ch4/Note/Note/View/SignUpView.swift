@@ -51,7 +51,7 @@ struct SignUpView: View {
                             Text("Forgot Password?")
                         }
                         .sheet(isPresented: $showingSheet){
-//                            ForgotPasswordView()
+                            ResetPasswordView()
                         }
                     }
                 }

@@ -6,17 +6,24 @@
 //
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 import Combine
 
 class NoteViewModel: ObservableObject {
     @Published var notes = [Note]()
     
-    private var databaseReference = Firestore.firestore().collection("Notes")
+    private lazy var databaseReference: CollectionReference? = {
+        guard let user = Auth.auth().currentUser?.uid else { return nil}
+        let ref = Firestore.firestore().collection("Users").document(user).collection("Posts")
+        return ref
+    }()
+    
+    
     
     //function to post data
     func addData(title: String){
         do {
-            _ = try databaseReference.addDocument(data: ["title": title])
+            _ = try databaseReference?.addDocument(data: ["title": title])
         }
         catch {
             print(error.localizedDescription)
@@ -26,7 +33,7 @@ class NoteViewModel: ObservableObject {
     
     //function to read data
     func fetchData() {
-        databaseReference.addSnapshotListener{
+        databaseReference?.addSnapshotListener{
             (querySnapshot, error) in guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
@@ -40,7 +47,7 @@ class NoteViewModel: ObservableObject {
     
     //function to update data
     func updateData(title: String, id: String) {
-        databaseReference.document(id).updateData(["title": title]){
+        databaseReference?.document(id).updateData(["title": title]){
             error in
             if let error = error {
                 print(error.localizedDescription)
@@ -54,7 +61,7 @@ class NoteViewModel: ObservableObject {
     func deleteData(at indexSet: IndexSet){
         indexSet.forEach{ index in
             let note = notes[index]
-            databaseReference.document(note.id ?? "").delete{error in
+            databaseReference?.document(note.id ?? "").delete{error in
                 if let error = error {
                     print(error.localizedDescription)
                 } else {

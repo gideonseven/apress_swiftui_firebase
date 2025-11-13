@@ -11,7 +11,7 @@ struct ContentView: View {
     @State private var showingSheet = false
     @State private var postDetent = PresentationDetent.medium
     @StateObject private var viewModel = NoteViewModel()
-    
+    @ObservedObject private var authModel = AuthViewModel()
     var body: some View {
         NavigationStack {
             List {
@@ -36,6 +36,13 @@ struct ContentView: View {
                                 Image(systemName: "square.and.pencil")
                             }
                             .imageScale(.large)
+                        }
+                    }
+                    ToolbarItemGroup(placement: .cancellationAction){
+                        Button{
+                            authModel.signOut()
+                        } label: {
+                            Text("Logout")
                         }
                     }
                 }
