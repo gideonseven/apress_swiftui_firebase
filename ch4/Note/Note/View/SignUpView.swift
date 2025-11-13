@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+
 struct SignUpView: View {
     
     @State private var emailAddress: String = ""
     @State private var password: String = ""
-    
+    @State private var showingSheet: Bool = false
+    @EnvironmentObject private var authModel : AuthViewModel
     
     var body: some View {
         
@@ -23,7 +25,36 @@ struct SignUpView: View {
                         .keyboardType(.emailAddress)
                     SecureField("password", text: $password)
                 }
-            }
+                
+                Section {
+                    Button(action: {
+                        // Sign up to firebase
+                        authModel.signUp(emailAddress: emailAddress, password: password)
+                    }){
+                        Text("Sign Up").bold()
+                    }
+                }
+                Section (header: Text("If you have already an account: ")){
+                    Button(action: {
+                        // Sign In To Firebase
+                        authModel.signIn(emailAddress: emailAddress, password: password)
+                    }){
+                        Text("Sign In")
+                    }
+                }
+            }.navigationTitle("Welcome")
+                .toolbar {
+                    ToolbarItemGroup(placement: .cancellationAction) {
+                        Button {
+                            showingSheet.toggle()
+                        } label: {
+                            Text("Forgot Password?")
+                        }
+                        .sheet(isPresented: $showingSheet){
+//                            ForgotPasswordView()
+                        }
+                    }
+                }
         }
     }
 }
