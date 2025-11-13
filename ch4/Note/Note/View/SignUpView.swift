@@ -9,9 +9,22 @@ import SwiftUI
 
 struct SignUpView: View {
     
+    @State private var emailAddress: String = ""
+    @State private var password: String = ""
+    
+    
     var body: some View {
-        Text("hello World")
-            .padding()
+        
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Email", text: $emailAddress)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                    SecureField("password", text: $password)
+                }
+            }
+        }
     }
 }
 

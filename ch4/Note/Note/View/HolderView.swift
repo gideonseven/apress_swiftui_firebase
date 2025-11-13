@@ -12,7 +12,7 @@ struct HolderView: View {
     
     var body: some View {
         Group {
-            if authModel.user == nill {
+            if authModel.user == nil {
                 SignUpView()
             }else {
                 ContentView()
@@ -26,5 +26,5 @@ struct HolderView: View {
 
 
 #Preview {
-    HolderView(authModel: AuthViewModel)
+    HolderView()
 }

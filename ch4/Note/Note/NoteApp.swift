@@ -25,7 +25,9 @@ struct NoteApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HolderView().environtmentObject(AuthViewModel())
+                        HolderView().environmentObject(AuthViewModel())
+//            Text("Hello, Firebase!")
+//                .font(.largeTitle)
         }
     }
 }
