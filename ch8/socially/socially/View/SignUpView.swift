@@ -9,6 +9,7 @@ import SwiftUI
 import AuthenticationServices
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseAnalytics
 
 struct SignUpView: View {
     @ObservedObject private var authModel = AuthViewModel()
