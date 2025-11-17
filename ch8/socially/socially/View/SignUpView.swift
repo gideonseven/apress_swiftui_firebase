@@ -41,6 +41,7 @@ struct SignUpView: View {
                                Button(action: {
                                    // Sign up to firebase
                                    authModel.signUp(emailAddress: emailAddress, password: password)
+                                   Analytics.logEvent("user_sign_up", parameters: nil)
                                }){
                                    Text("Sign Up").bold()
                                }
